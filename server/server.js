@@ -1,16 +1,24 @@
 import express from "express";
 import mongoose, { connect } from "mongoose";
-const app = express();
-const port = 3000;
-const mongoURI =
-  "mongodb+srv://darylmvom01_db_user:azerty@cluster0.4elbwda.mongodb.net/?appName=Cluster0";
+import dotenv from "dotenv";
 
-mongoose.connect(mongoURI).then(() => console.log("Connecté à MongoDB"));
+// Charger les variables d'environnement du fichier .env
+dotenv.config();
+
+const app = express();
+
+const MONGO_URI = process.env.Mongo_URI;
+const PORT = process.env.port;
+
+mongoose
+  .connect(MONGO_URI)
+  .then(() => console.log("Connecté à MongoDB"))
+  .catch((err) => console.error("Erreur Mongoose : ", err));
 
 app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-app.listen(port, () => {
-  console.log(`Le serveur est lancé sur le port ${port}`);
+app.listen(PORT, () => {
+  console.log(`Le serveur est lancé sur le port ${PORT}`);
 });
