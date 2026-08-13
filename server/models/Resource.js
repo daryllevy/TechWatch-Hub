@@ -1,8 +1,7 @@
-import mongoose from "mongoose";
-import { type } from "node:os";
+const mongoose = require("mongoose");
 const { Schema, model } = mongoose;
 
-const resource = new Schema(
+const resourceSchema = new Schema(
   {
     title: {
       type: String,
@@ -18,8 +17,11 @@ const resource = new Schema(
       required: true,
     },
     level: String,
-    status: String,
-    tag: String,
+    status: {
+      type: String,
+      default: "à découvrir",
+    },
+    tags: [String],
   },
   {
     timestamps: true,
@@ -27,5 +29,4 @@ const resource = new Schema(
 );
 
 // Création du model
-const Resource = model("Resource", resource);
-export default Resource;
+module.exports = model("Resource", resourceSchema);
