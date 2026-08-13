@@ -15,3 +15,12 @@ exports.getAllResources = async (req, res) => {
   const resources = await Resource.find();
   res.json(resources);
 };
+
+exports.getResource = async (req, res) => {
+  const resource = await Resource.findById(req.params.id);
+
+  if (!resource)
+    return res.status(404).json({ error: "Ressource introuvable" });
+
+  res.json(resource);
+};
