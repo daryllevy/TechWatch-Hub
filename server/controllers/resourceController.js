@@ -17,10 +17,16 @@ exports.getAllResources = async (req, res) => {
 };
 
 exports.getResourceById = async (req, res) => {
-  const resource = await Resource.findById(req.params.id);
+  try {
+    const resource = await Resource.findById(req.params.id);
 
-  if (!resource)
-    return res.status(404).json({ error: "Ressource introuvable" });
+    if (!resource)
+      return res.status(404).json({ error: "Ressource introuvable" });
 
-  res.json(resource);
+    res.json(resource);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ error: "L'id fournit n'est pas valide ou mal formé" });
+  }
 };
