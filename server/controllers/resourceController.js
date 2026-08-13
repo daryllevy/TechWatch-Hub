@@ -16,7 +16,7 @@ exports.getAllResources = async (req, res) => {
   res.json(resources);
 };
 
-exports.getResource = async (req, res) => {
+exports.getResourceById = async (req, res) => {
   const resource = await Resource.findById(req.params.id);
 
   if (!resource)
