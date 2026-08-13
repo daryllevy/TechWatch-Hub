@@ -9,3 +9,9 @@ exports.createResource = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+
+// Lister toutes les ressources
+exports.getAllResources = async (req, res) => {
+  const resources = await Resource.find();
+  res.json(resources);
+};
