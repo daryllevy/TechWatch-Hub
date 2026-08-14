@@ -5,5 +5,6 @@ const resourceController = require("../controllers/resourceController");
 router.post("/", resourceController.createResource);
 router.get("/", resourceController.getAllResources);
 router.get("/:id", resourceController.getResourceById);
+router.put("/:id", resourceController.updateResource);
 
 module.exports = router;
