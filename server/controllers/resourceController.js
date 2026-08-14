@@ -12,8 +12,14 @@ exports.createResource = async (req, res) => {
 
 // Lister toutes les ressources
 exports.getAllResources = async (req, res) => {
-  const resources = await Resource.find().exec();
-  res.json(resources);
+  try {
+    const resources = await Resource.find().exec();
+    res.json(resources);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ error: "Erreur lors de la récupération des ressources" });
+  }
 };
 
 exports.getResourceById = async (req, res) => {
