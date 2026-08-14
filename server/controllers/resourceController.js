@@ -34,7 +34,7 @@ exports.getResourceById = async (req, res) => {
 // Modifier une ressource
 exports.updateResource = async (req, res) => {
   try {
-    const id = req.params.id;
+    const {id} = req.params.id; // récupère l'Id dans l'url
     const updates = req.body;
 
     const updatedResource = await Resource.findByIdAndUpdate(id, updates, {
@@ -43,16 +43,23 @@ exports.updateResource = async (req, res) => {
     }).exec();
 
     if (!updatedResource) {
-     return res.status(404).json({ error: "La ressource n'existe pas" });
+      return res.status(404).json({ error: "La ressource n'existe pas" });
     }
 
     res.status(200).json(updatedResource);
   } catch (err) {
-    res
-      .status(400)
-      .json({
-        error:
-          "La requête envoyée est invalide : données manquantes ou mal formées",
-      });
+    res.status(400).json({
+      error:
+        "La requête envoyée est invalide : données manquantes ou mal formées",
+    });
   }
+};
+
+// Supprimer une ressource
+exports.deleteResource = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+
+  } catch (err) {}
 };
