@@ -26,7 +26,7 @@ exports.getResourceById = async (req, res) => {
     res.json(resource);
   } catch (err) {
     res
-      .status(500)
+      .status(400)
       .json({ error: "L'id fournit n'est pas valide ou mal formé" });
   }
 };
@@ -34,7 +34,7 @@ exports.getResourceById = async (req, res) => {
 // Modifier une ressource
 exports.updateResource = async (req, res) => {
   try {
-    const id  = req.params.id; // récupère l'Id dans l'url
+    const id = req.params.id; // récupère l'Id dans l'url
     const updates = req.body;
 
     const updatedResource = await Resource.findByIdAndUpdate(id, updates, {
@@ -58,7 +58,7 @@ exports.updateResource = async (req, res) => {
 // Supprimer une ressource
 exports.deleteResource = async (req, res) => {
   try {
-    const id  = req.params.id;
+    const id = req.params.id;
 
     const deletedResource = await Resource.findByIdAndDelete(id);
 
