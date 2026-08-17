@@ -6,16 +6,16 @@ const userSchema = new Schema(
   {
     username: {
       type: String,
-      require: true,
+      required: true,
     },
     email: {
       type: String,
-      require: true,
+      required: true,
       unique: true,
     },
     password: {
       type: String,
-      require: true,
+      required: true,
     },
   },
   {
@@ -29,9 +29,8 @@ userSchema.pre("save", async function (next) {
   try {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
-    next(); // donne le feu vert à Mongoose pour enregistrer
   } catch (err) {
-    next(err); // on bloque l'enregistrement
+    throw err;
   }
 });
 
