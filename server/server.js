@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const resourcesRoutes = require("./routes/resourceRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 // Charger les variables d'environnement du fichier .env
 dotenv.config();
@@ -17,7 +18,9 @@ mongoose
   .then(() => console.log("Connecté à MongoDB"))
   .catch((err) => console.error("Erreur Mongoose : ", err));
 
+// MES ROUTES
 app.use("/api/resources", resourcesRoutes);
+app.use("/api/auth", userRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello World");
