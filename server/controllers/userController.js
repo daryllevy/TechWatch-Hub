@@ -8,7 +8,8 @@ const MA_PHRASE_SECRETE = process.env.JWT_SECRET;
 // Fonction d'inscription
 exports.registerUser = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, password } = req.body;
+    const email = req.body.email.toLowerCase().trim();
 
     // Verifie si l'utilisateur existe déjà
     const existingUser = await User.findOne({ email }).exec();
@@ -26,13 +27,18 @@ exports.registerUser = async (req, res) => {
       utilisateurId: newUser._id,
     });
   } catch (err) {
+    if (err.name === "ValidationError") {
+      const messages = Object.values(err.errors).map((e) => e.message);
+      return res.status(400).json({ error: messages.join(", ") });
+    }
     res.status(500).json({ error: err.message });
   }
 };
 
 exports.loginUser = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, password } = req.body;
+    const email = req.body.email.toLowerCase().trim();
 
     const user = await User.findOne({ email }).exec();
     if (!user) {
