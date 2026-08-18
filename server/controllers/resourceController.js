@@ -6,7 +6,11 @@ exports.createResource = async (req, res) => {
     const resource = await Resource.create(req.body);
     res.status(201).json(resource);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    if (err.name === "ValidationError") {
+      const messages = Object.values(err.errors).map((e) => e.message);
+      return res.status(400).json({ error: messages.join(", ") });
+    }
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -54,10 +58,11 @@ exports.updateResource = async (req, res) => {
 
     res.status(200).json(updatedResource);
   } catch (err) {
-    res.status(400).json({
-      error:
-        "La requête envoyée est invalide : données manquantes ou mal formées",
-    });
+    if (err.name === "ValidationError") {
+      const messages = Object.values(err.errors).map((e) => e.message);
+      return res.status(400).json({ error: messages.join(", ") });
+    }
+    res.status(500).json({ error: err.message });
   }
 };
 
