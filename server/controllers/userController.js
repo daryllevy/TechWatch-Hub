@@ -69,3 +69,27 @@ exports.loginUser = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+exports.updateProfile = async (req, res) => {
+  try {
+    const id = req.user;
+    const { username } = req.body;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { username },
+      {
+        new: true,
+        runValidators: true,
+      },
+    ).select("-password"); //exclut le hash du mot de passe de la réponse
+
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    if (err.name === "ValidationError") {
+      const messages = Object.values(err.errors).map((e) => e.message);
+      return res.status(400).json({ error: messages.join(", ") });
+    }
+    res.status(500).json({ error: err.message });
+  }
+};
