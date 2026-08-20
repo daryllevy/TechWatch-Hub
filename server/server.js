@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const resourcesRoutes = require("./routes/resourceRoutes");
 const userRoutes = require("./routes/userRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 // Charger les variables d'environnement du fichier .env
 dotenv.config();
@@ -20,7 +21,8 @@ mongoose
 
 // MES ROUTES
 app.use("/api/resources", resourcesRoutes);
-app.use("/api/auth", userRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello World");
