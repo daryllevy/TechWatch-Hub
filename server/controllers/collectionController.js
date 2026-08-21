@@ -36,3 +36,23 @@ exports.createCollection = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+exports.getMyCollections = async (req, res) => {
+  try {
+    const myCollections = await Collection.find({ userId: req.user }).exec();
+
+    if (myCollections.length === 0) {
+      return res
+        .status(200)
+        .json({ error: "Vous n'avez pas encore de collection, créez-en" });
+    }
+
+    res.status(200).json({ myCollections });
+  } catch (err) {
+    res.status(500).json({
+      error: err.message,
+    });
+  }
+};
+
+
