@@ -22,6 +22,7 @@ const resourceSchema = new Schema(
       default: "à découvrir",
     },
     tags: [String],
+    userId: Schema.Types.ObjectId,
   },
   {
     timestamps: true,
