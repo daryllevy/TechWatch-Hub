@@ -55,4 +55,26 @@ exports.getMyCollections = async (req, res) => {
   }
 };
 
+exports.getCollection = async (req, res) => {
+  try {
+    const collectionId = req.params.id;
 
+    const collection = await Collection.findById(collectionId).exec();
+
+    if (!collection) {
+      return res.status(404).json({ error: "Cette collection n'existe pas" });
+    }
+
+    const isAccessible = collection.isPublic;
+
+    if (!isAccessible) {
+      return collection.userId == req.user
+        ? res.status(200).json(collection)
+        : res.status(403).json({ error: "Accès interdit à la collection" });
+    }
+
+    res.status(200).json(collection);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
