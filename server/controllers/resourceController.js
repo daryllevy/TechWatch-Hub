@@ -3,9 +3,23 @@ const Resource = require("../models/Resource");
 // Fonction qui crée la ressource
 exports.createResource = async (req, res) => {
   try {
-    const resource = await Resource.create(req.body);
+    const { title, url, description, technology, level, status, tags } =
+      req.body;
+    const userId = req.user;
+    const resource = await Resource.create({
+      title,
+      url,
+      description,
+      technology,
+      level,
+      status,
+      tags,
+      userId,
+    });
+    console.log("Ressource crée : ", resource);
     res.status(201).json(resource);
   } catch (err) {
+    technology;
     if (err.name === "ValidationError") {
       const messages = Object.values(err.errors).map((e) => e.message);
       return res.status(400).json({ error: messages.join(", ") });
