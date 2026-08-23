@@ -7,5 +7,6 @@ router.post("/", authMiddleware, collectionController.createCollection);
 router.get("/", authMiddleware, collectionController.getMyCollections);
 router.get("/:id", authMiddleware, collectionController.getCollection);
 router.put("/:id", authMiddleware, collectionController.updateCollection);
+router.delete("/:id", authMiddleware, collectionController.deleteCollection);
 
 module.exports = router;

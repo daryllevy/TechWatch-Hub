@@ -42,9 +42,7 @@ exports.getMyCollections = async (req, res) => {
     const myCollections = await Collection.find({ userId: req.user }).exec();
 
     if (myCollections.length === 0) {
-      return res
-        .status(200)
-        .json({ error: "Vous n'avez pas encore de collection, créez-en" });
+      return res.status(200).json({ myCollections: [] });
     }
 
     res.status(200).json({ myCollections });
@@ -68,7 +66,7 @@ exports.getCollection = async (req, res) => {
     const isAccessible = collection.isPublic;
 
     if (!isAccessible) {
-      return collection.userId == req.user
+      return collection.userId.toString() == req.user.toString()
         ? res.status(200).json(collection)
         : res.status(403).json({ error: "Accès interdit à la collection" });
     }
@@ -96,15 +94,44 @@ exports.updateCollection = async (req, res) => {
       });
     }
 
-    const updates = req.body;
+    const { title, description, isPublic } = req.body;
 
     const updatedCollection = await Collection.findByIdAndUpdate(
       collectionId,
-      updates,
-      { run: true, runValidators: true },
+      { title, description, isPublic },
+      { new: true, runValidators: true },
     ).exec();
     res.status(200).json(updatedCollection);
   } catch (err) {
     res.status(400).json({ error: err.message });
+  }
+};
+
+exports.deleteCollection = async (req, res) => {
+  try {
+    const collectionId = req.params.id;
+
+    const collection = await Collection.findById(collectionId).exec();
+
+    if (!collection) {
+      return res.status(404).json({ error: "Cette collection n'existe pas." });
+    }
+
+    if (collection.userId.toString() !== req.user.toString()) {
+      return res.status(403).json({
+        error:
+          "Accès refusé : Vous n'êtes pas le propriétaire de cette collection.",
+      });
+    }
+
+    const deletedCollection =
+      await Collection.findByIdAndDelete(collectionId).exec();
+
+    res.status(200).json({
+      message: "Collection supprimée avec succès.",
+      data: deletedCollection,
+    });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
   }
 };
