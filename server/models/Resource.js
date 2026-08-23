@@ -22,7 +22,7 @@ const resourceSchema = new Schema(
       default: "à découvrir",
     },
     tags: [String],
-    userId: Schema.Types.ObjectId,
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
   },
   {
     timestamps: true,
