@@ -78,3 +78,33 @@ exports.getCollection = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+
+exports.updateCollection = async (req, res) => {
+  try {
+    const collectionId = req.params.id;
+
+    const collection = await Collection.findById(collectionId).exec();
+
+    if (!collection) {
+      return res.status(404).json({ error: "Cette collection n'existe pas." });
+    }
+
+    if (collection.userId.toString() !== req.user.toString()) {
+      return res.status(403).json({
+        error:
+          "Accès refusé : Vous n'êtes pas le propriétaire de cette collection.",
+      });
+    }
+
+    const updates = req.body;
+
+    const updatedCollection = await Collection.findByIdAndUpdate(
+      collectionId,
+      updates,
+      { run: true, runValidators: true },
+    ).exec();
+    res.status(200).json(updatedCollection);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};

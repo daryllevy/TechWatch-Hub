@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const collectionRessources = require("../controllers/collectionController");
+const collectionController = require("../controllers/collectionController");
 const { authMiddleware } = require("../middlewares/authMiddleware");
 
-router.post("/", authMiddleware, collectionRessources.createCollection);
-router.get("/", authMiddleware, collectionRessources.getMyCollections);
-router.get("/:id", authMiddleware, collectionRessources.getCollection);
+router.post("/", authMiddleware, collectionController.createCollection);
+router.get("/", authMiddleware, collectionController.getMyCollections);
+router.get("/:id", authMiddleware, collectionController.getCollection);
+router.put("/:id", authMiddleware, collectionController.updateCollection);
 
 module.exports = router;
