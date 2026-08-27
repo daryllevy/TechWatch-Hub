@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const resourcesRoutes = require("./routes/resourceRoutes");
@@ -10,6 +11,7 @@ const collectionsRoutes = require("./routes/collectionRoutes");
 dotenv.config();
 
 const app = express();
+app.use(cors()); // autorise n'importe quel site à appeler le serveur
 app.use(express.json());
 
 const MONGO_URI = process.env.Mongo_URI;
