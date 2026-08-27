@@ -1,13 +1,22 @@
-import { useEffect } from "react";
-import "./App.css";
+import { useState, useEffect } from "react";
 import axios from "axios";
+import ResourceCard from "./components/ResourceCard";
+import "./App.css";
 
 function App() {
+  const [resources, setResources] = useState([]);
+
   useEffect(() => {
     async function loadResources() {
       try {
-        const response = await axios.get("http://localhost:5000/");
-        console.log(response.data);
+        const tokenTemporaire =
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhODZiNTA3YmU4YjM0NGNiOTZhOWI1YyIsInVzZXJuYW1lIjoiaWUiLCJpYXQiOjE3ODc4NDgxMzgsImV4cCI6MTc4NzkzNDUzOH0.2vEGpQl5IBmv_XzHbgQhkBTeR7PEJjquKz9h2mNhxsM";
+
+        const response = await axios.get(
+          "http://localhost:5000/api/resources",
+          { headers: { Authorization: `Bearer ${tokenTemporaire}` } },
+        );
+        setResources(response.data);
       } catch (error) {
         console.error(error.message);
       }
@@ -28,8 +37,11 @@ function App() {
       </header>
 
       <main className="content">
-        {/* Cette zone accueillera les pages, plus tard avec React Router */}
-        <p>Zone de contenu — changera selon la page</p>
+        <div className="resource-grid">
+          {resources.map((resource) => (
+            <ResourceCard key= {resource.id} resource = {resource} />
+          ))}
+        </div>
       </main>
     </div>
   );
