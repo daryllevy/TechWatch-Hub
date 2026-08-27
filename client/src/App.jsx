@@ -1,8 +1,22 @@
-import './App.css';
+import { useEffect } from "react";
+import "./App.css";
+import axios from "axios";
 
 function App() {
+  useEffect(() => {
+    async function loadResources() {
+      try {
+        const response = await axios.get("http://localhost:5000/");
+        console.log(response.data);
+      } catch (error) {
+        console.error(error.message);
+      }
+    }
+    loadResources();
+  }, []);
+
   return (
-    <div className='app-layout'>
+    <div className="app-layout">
       <header className="navbar">
         <div className="navbar-logo">TechWatch Hub</div>
         <nav className="navbar-links">
@@ -10,7 +24,7 @@ function App() {
           <a href="/resources">Ressources</a>
           <a href="/collections">Collections</a>
         </nav>
-         <div className="navbar-account">👤</div>
+        <div className="navbar-account">👤</div>
       </header>
 
       <main className="content">
