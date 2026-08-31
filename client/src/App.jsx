@@ -12,7 +12,7 @@ function App() {
     async function loadResources() {
       try {
         const tokenTemporaire =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhODZiNTA3YmU4YjM0NGNiOTZhOWI1YyIsInVzZXJuYW1lIjoiaWUiLCJpYXQiOjE3ODc4NDgxMzgsImV4cCI6MTc4NzkzNDUzOH0.2vEGpQl5IBmv_XzHbgQhkBTeR7PEJjquKz9h2mNhxsM";
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhODZiNTA3YmU4YjM0NGNiOTZhOWI1YyIsInVzZXJuYW1lIjoiaWUiLCJpYXQiOjE3ODgyMDQwNDcsImV4cCI6MTc4ODI5MDQ0N30.nej4mJCa3tZR91a-_gQpgVcCQTL2V6fxOc7MzoGMhao";
 
         const response = await axios.get(
           "http://localhost:5000/api/resources",
