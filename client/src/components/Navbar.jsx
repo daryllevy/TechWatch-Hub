@@ -1,8 +1,12 @@
+import { Link } from "react-router-dom";
+
 function Navbar() {
   return (
     <header className="navbar">
       <div className="navbar-logo">TechWatch Hub</div>
-      <div className="navbar-account">👤</div>
+      <Link to="/login" className="navbar-account">
+        👤
+      </Link>
     </header>
   );
 }

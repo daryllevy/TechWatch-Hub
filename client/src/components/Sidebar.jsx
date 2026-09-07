@@ -1,10 +1,11 @@
+import { Link } from "react-router-dom";
+
 function Sidebar() {
   return (
     <aside className="sidebar">
       <nav className="sidebar-links">
-        <a href="/">Accueil</a>
-        <a href="/resources">Ressources</a>
-        <a href="/collections">Collections</a>
+        {/*pour éviter de recharger complètement la page*/}
+        <Link to="/">Acceuil</Link>
       </nav>
     </aside>
   );

@@ -1,42 +1,15 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { Outlet } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
-import ResourceCard from "./components/ResourceCard";
 import "./App.css";
 
 function App() {
-  const [resources, setResources] = useState([]);
-
-  useEffect(() => {
-    async function loadResources() {
-      try {
-        const tokenTemporaire =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhODZiNTA3YmU4YjM0NGNiOTZhOWI1YyIsInVzZXJuYW1lIjoiaWUiLCJpYXQiOjE3ODgyMDQwNDcsImV4cCI6MTc4ODI5MDQ0N30.nej4mJCa3tZR91a-_gQpgVcCQTL2V6fxOc7MzoGMhao";
-
-        const response = await axios.get(
-          "http://localhost:5000/api/resources",
-          { headers: { Authorization: `Bearer ${tokenTemporaire}` } },
-        );
-        setResources(response.data);
-      } catch (error) {
-        console.error(error.message);
-      }
-    }
-    loadResources();
-  }, []);
-
   return (
     <div className="app-layout">
       <Navbar />
       <Sidebar />
-
       <main className="content">
-        <div className="resource-grid">
-          {resources.map((resource) => (
-            <ResourceCard key={resource.id} resource={resource} />
-          ))}
-        </div>
+        <Outlet />
       </main>
     </div>
   );
