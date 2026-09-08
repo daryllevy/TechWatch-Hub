@@ -1,9 +1,5 @@
 const User = require("../models/User");
-const jwt = require("jsonwebtoken");
-const dotenv = require("dotenv");
-
-dotenv.config();
-const MA_PHRASE_SECRETE = process.env.JWT_SECRET;
+const generateToken = require("../utils/generateToken");
 
 // Fonction d'inscription
 exports.registerUser = async (req, res) => {
@@ -21,9 +17,11 @@ exports.registerUser = async (req, res) => {
     }
 
     const newUser = await User.create({ username, email, password });
+    const token = generateToken(newUser);
 
     res.status(201).json({
       message: "Utilisateur crée avec succès",
+      token: token,
       utilisateurId: newUser._id,
     });
   } catch (err) {
@@ -37,7 +35,7 @@ exports.registerUser = async (req, res) => {
 
 exports.loginUser = async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { password } = req.body;
     const email = req.body.email.toLowerCase().trim();
 
     const user = await User.findOne({ email }).exec();
@@ -54,11 +52,7 @@ exports.loginUser = async (req, res) => {
         .json({ error: "Identifiants invalides : mot de passe incorrect" });
     }
 
-    const token = jwt.sign(
-      { id: user._id, username: user.username },
-      MA_PHRASE_SECRETE,
-      { expiresIn: "24h" },
-    );
+    const token = generateToken(user);
 
     res.status(200).json({
       message: "Connexion réussie !",
