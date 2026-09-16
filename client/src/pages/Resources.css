@@ -12,6 +12,7 @@
   color: #666;
   margin-bottom: 0.6rem;
   display: -webkit-box;
+  line-clamp: 2;
   -webkit-line-clamp: 2; /* spécifie le nombre de ligne qu'aura le texte*/
   -webkit-box-orient: vertical;
   overflow: hidden;
@@ -25,5 +26,3 @@
   cursor: pointer;
   font-family: inherit;
 }
-
-
