@@ -1,3 +1,6 @@
+import api from "../services/api";
+// import "./Resources.css";
+
 const statusColors = {
   "à découvrir": "gray",
   "en cours": "blue",
@@ -6,25 +9,54 @@ const statusColors = {
   favori: "purple",
 };
 
+const statusOrder = ["à découvrir", "en cours", "terminée"];
+
 const levelColors = {
   débutant: "green",
   intermédiaire: "orange",
   avancé: "red",
 };
 
-function ResourceCard({ resource }) {
+function getNextStatus(current) {
+  const index = statusOrder.indexOf(current);
+  if (index === -1 || index === statusOrder.length - 1) return null;
+  return statusOrder[index + 1];
+}
+
+function ResourceCard({ resource, onStatusChange }) {
   const statusColor = statusColors[resource.status] || "gray";
   const levelColor = levelColors[resource.level] || "gray";
+  const nextStatus = getNextStatus(resource.status);
+
+  async function handleAdvanceStatus() {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await api.put(
+        `/api/resources/${resource._id}/status`,
+        {
+          status: nextStatus,
+        },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+      onStatusChange(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   return (
     <div className="resource-card">
       <div className="resource-card-header">
-        <h3>
-          <a href={resource.url} target="_blank" rel="noopener noreferrer">
-            {resource.title}
-          </a>
-        </h3>
-        <span className={`badge badge-${statusColor}`}>{resource.status}</span>
+        <h3>{resource.title}</h3>
+        <span
+          className={`badge badge-${statusColor} ${nextStatus ? "badge-clickable" : ""}`}
+          onClick={nextStatus ? handleAdvanceStatus : undefined}
+          title={
+            nextStatus ? `Cliquer pour passer à "${nextStatus}"` : undefined
+          }
+        >
+          {resource.status}
+        </span>
       </div>
       <div className="resource-card-footer">
         <span className="badge">{resource.technology}</span>

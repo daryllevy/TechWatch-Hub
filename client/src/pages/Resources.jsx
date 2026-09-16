@@ -29,6 +29,12 @@ function Resources() {
     setResources((prev) => [...prev, newResource]); // prev : état actuel juste avant la mise à jour
   }
 
+  function handleStatusChange(updatedResource) {
+    setResources((prev) =>
+      prev.map((r) => (r._id === updatedResource._id ? updatedResource : r)),
+    );
+  }
+
   return (
     <div className="resources-page">
       <div className="resources-toolbar">
@@ -39,7 +45,11 @@ function Resources() {
 
       <div className="resource-grid">
         {resources.map((resource) => (
-          <ResourceCard key={resource._id} resource={resource} />
+          <ResourceCard
+            key={resource._id}
+            resource={resource}
+            onStatusChange={handleStatusChange}
+          />
         ))}
       </div>
 
