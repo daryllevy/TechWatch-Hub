@@ -9,7 +9,13 @@ const statusColors = {
   favori: "purple",
 };
 
-const statusOrder = ["à découvrir", "en cours", "terminée"];
+const allStatuses = [
+  "à découvrir",
+  "en cours",
+  "terminée",
+  "à revoir",
+  "favori",
+];
 
 const levelColors = {
   débutant: "green",
@@ -17,24 +23,18 @@ const levelColors = {
   avancé: "red",
 };
 
-function getNextStatus(current) {
-  const index = statusOrder.indexOf(current);
-  if (index === -1 || index === statusOrder.length - 1) return null;
-  return statusOrder[index + 1];
-}
-
 function ResourceCard({ resource, onStatusChange }) {
   const statusColor = statusColors[resource.status] || "gray";
   const levelColor = levelColors[resource.level] || "gray";
-  const nextStatus = getNextStatus(resource.status);
 
-  async function handleAdvanceStatus() {
+  async function handleStatusChange(e) {
+    const newStatus = e.target.value;
     try {
       const token = localStorage.getItem("token");
       const response = await api.put(
         `/api/resources/${resource._id}/status`,
         {
-          status: nextStatus,
+          status: newStatus,
         },
         { headers: { Authorization: `Bearer ${token}` } },
       );
@@ -48,16 +48,19 @@ function ResourceCard({ resource, onStatusChange }) {
     <div className="resource-card">
       <div className="resource-card-header">
         <h3>{resource.title}</h3>
-        <span
-          className={`badge badge-${statusColor} ${nextStatus ? "badge-clickable" : ""}`}
-          onClick={nextStatus ? handleAdvanceStatus : undefined}
-          title={
-            nextStatus ? `Cliquer pour passer à "${nextStatus}"` : undefined
-          }
+        <select
+          className={`badge-select badge-${statusColor}`}
+          value={resource.status}
+          onChange={handleStatusChange}
         >
-          {resource.status}
-        </span>
+          {allStatuses.map((s) => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ))}
+        </select>
       </div>
+      <p className="resource-card-description">{resource.description}</p>
       <div className="resource-card-footer">
         <span className="badge">{resource.technology}</span>
         <span className={`badge badge-${levelColor}`}>{resource.level}</span>
