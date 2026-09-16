@@ -5,7 +5,8 @@ function Sidebar() {
     <aside className="sidebar">
       <nav className="sidebar-links">
         {/*pour éviter de recharger complètement la page*/}
-        <Link to="/">Acceuil</Link>
+        <Link to="/">Accueil</Link>
+        <Link to="/resources">Resources</Link>
       </nav>
     </aside>
   );

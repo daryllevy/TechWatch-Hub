@@ -1,10 +1,10 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import App from "./App.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
-import Dashboard from "./pages/Dashboard.jsx";
+import Resources from "./pages/Resources.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import PublicOnlyRoute from "./components/PublicOnlyRoute.jsx";
 import "./index.css";
@@ -34,7 +34,15 @@ createRoot(document.getElementById("root")).render(
             index
             element={
               <PrivateRoute>
-                <Dashboard />
+                <Navigate to="/resources" replace />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="resources"
+            element={
+              <PrivateRoute>
+                <Resources />
               </PrivateRoute>
             }
           />

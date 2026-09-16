@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../services/api";
 import "./Auth.css";
 
 function Login() {
@@ -13,10 +13,7 @@ function Login() {
     e.preventDefault();
     setError("");
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/auth/login",
-        { email, password },
-      );
+      const response = await api.post("/api/auth/login", { email, password });
       localStorage.setItem("token", response.data.token);
       navigate("/");
     } catch (err) {
