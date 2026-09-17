@@ -6,6 +6,7 @@ import "./Resources.css";
 
 function Resources() {
   const [resources, setResources] = useState([]);
+  const [editingResource, setEditingResource] = useState(null);
   const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
@@ -25,14 +26,26 @@ function Resources() {
     chargerRessources();
   }, []);
 
-  function handleCreated(newResource) {
-    setResources((prev) => [...prev, newResource]); // prev : état actuel juste avant la mise à jour
+  function handleSaved(savedResource) {
+    setResources((prev) => {
+      const exists = prev.some((r) => r._id === savedResource._id);
+      return exists
+        ? prev.map((r) => (r._id === savedResource._id ? savedResource : r))
+        : [...prev, savedResource];
+    });
   }
 
-  function handleStatusChange(updatedResource) {
-    setResources((prev) =>
-      prev.map((r) => (r._id === updatedResource._id ? updatedResource : r)),
-    );
+  async function handleDelete(id) {
+    if (!window.confirm("Supprimer définitivement cette ressource ?")) return; // popup de confirmation
+    try {
+      const token = localStorage.getItem("token");
+      await api.delete(`/api/resources/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setResources((prev) => prev.filter((r) => r._id !== id));
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   return (
@@ -48,7 +61,9 @@ function Resources() {
           <ResourceCard
             key={resource._id}
             resource={resource}
-            onStatusChange={handleStatusChange}
+            onStatusChange={handleSaved}
+            onEdit={setEditingResource}
+            onDelete={handleDelete}
           />
         ))}
       </div>
@@ -56,7 +71,14 @@ function Resources() {
       {showForm && (
         <ResourceFormModal
           onClose={() => setShowForm(false)}
-          onCreated={handleCreated}
+          onSaved={handleSaved}
+        />
+      )}
+      {editingResource && (
+        <ResourceFormModal
+          onClose={() => setEditingResource(null)}
+          onSaved={handleSaved}
+          resourceToEdit={editingResource}
         />
       )}
     </div>

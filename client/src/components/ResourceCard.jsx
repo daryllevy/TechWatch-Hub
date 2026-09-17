@@ -1,31 +1,17 @@
+import { Link } from "react-router-dom";
 import api from "../services/api";
-// import "./Resources.css";
+import { statusColors, levelColors } from "../utils/resourceColors";
 
-const statusColors = {
-  "à découvrir": "gray",
-  "en cours": "blue",
-  terminée: "green",
-  "à revoir": "orange",
-  favori: "purple",
-};
-
-const allStatuses = [
-  "à découvrir",
-  "en cours",
-  "terminée",
-  "à revoir",
-  "favori",
-];
-
-const levelColors = {
-  débutant: "green",
-  intermédiaire: "orange",
-  avancé: "red",
-};
-
-function ResourceCard({ resource, onStatusChange }) {
+function ResourceCard({ resource, onStatusChange, onEdit, onDelete }) {
   const statusColor = statusColors[resource.status] || "gray";
   const levelColor = levelColors[resource.level] || "gray";
+  const allStatuses = [
+    "à découvrir",
+    "en cours",
+    "terminée",
+    "à revoir",
+    "favori",
+  ];
 
   async function handleStatusChange(e) {
     const newStatus = e.target.value;
@@ -47,19 +33,37 @@ function ResourceCard({ resource, onStatusChange }) {
   return (
     <div className="resource-card">
       <div className="resource-card-header">
-        <h3>{resource.title}</h3>
-        <select
-          className={`badge-select badge-${statusColor}`}
-          value={resource.status}
-          onChange={handleStatusChange}
-        >
-          {allStatuses.map((s) => (
-            <option key={s} value={s}>
-              {s}
-            </option>
-          ))}
-        </select>
+        <Link to={`/resources/${resource._id}`} className="resource-card-title">
+          <h3>{resource.title}</h3>
+        </Link>
+        <div className="resource-card-icons">
+          <button
+            onClick={() => onEdit(resource)}
+            className="icon-btn"
+            title="Modifier"
+          >
+            ✎
+          </button>
+          <button
+            onClick={() => onDelete(resource._id)}
+            className="icon-btn"
+            title="Supprimer"
+          >
+            🗑
+          </button>
+        </div>
       </div>
+      <select
+        className={`badge-select badge-${statusColor}`}
+        value={resource.status}
+        onChange={handleStatusChange}
+      >
+        {allStatuses.map((s) => (
+          <option key={s} value={s}>
+            {s}
+          </option>
+        ))}
+      </select>
       <p className="resource-card-description">{resource.description}</p>
       <div className="resource-card-footer">
         <span className="badge">{resource.technology}</span>

@@ -2,38 +2,47 @@ import { useState } from "react";
 import "./ResourceFormModal.css";
 import api from "../services/api";
 
-function ResourceFormModal({ onClose, onCreated }) {
-  const [title, setTitle] = useState("");
-  const [url, setUrl] = useState("");
-  const [description, setDescription] = useState("");
-  const [level, setLevel] = useState("débutant");
-  const [technology, setTechnology] = useState("");
-  const [status, setStatus] = useState("à découvrir");
-  const [tags, setTags] = useState("");
+function ResourceFormModal({ onClose, onSaved, resourceToEdit }) {
+  const isEditing = Boolean(resourceToEdit);
+
+  const [title, setTitle] = useState(resourceToEdit?.title || "");
+  const [url, setUrl] = useState(resourceToEdit?.url || "");
+  const [description, setDescription] = useState(
+    resourceToEdit?.description || "",
+  );
+  const [level, setLevel] = useState(resourceToEdit?.level || "débutant");
+  const [technology, setTechnology] = useState(
+    resourceToEdit?.technology || "",
+  );
+  const [status, setStatus] = useState(resourceToEdit?.status || "à découvrir");
+  const [tags, setTags] = useState(resourceToEdit?.tags?.join(", ") || "");
   const [error, setError] = useState("");
 
   async function handleSubmit(e) {
     e.preventDefault;
     setError("");
+    const token = localStorage.getItem("token");
+    const payload = {
+      title,
+      url,
+      description,
+      technology,
+      level,
+      status,
+      tags: tags
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean),
+    };
     try {
-      const token = localStorage.getItem("token");
-      const response = await api.post(
-        "/api/resources",
-        {
-          title,
-          url,
-          description,
-          technology,
-          level,
-          status,
-          tags: tags
-            .split(",")
-            .map((t) => t.trim())
-            .filter(Boolean),
-        },
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
-      onCreated(response.data);
+      const response = isEditing
+        ? await api.put(`/api/resources/${resourceToEdit._id}`, payload, {
+            headers: { Authorization: `Bearer ${token}` },
+          })
+        : await api.post("/api/resources", payload, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+      onSaved(response.data);
       onClose();
     } catch (err) {
       setError(err.response?.data?.error || "Une erreur est survenue");
@@ -43,7 +52,7 @@ function ResourceFormModal({ onClose, onCreated }) {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-card" onClick={(e) => e.stopPropagation()}>
-        <h2>Ajouter une ressource</h2>
+        <h2>{isEditing ? "Modifer la resource" : "Ajouter une ressource"} </h2>
         <form onSubmit={handleSubmit} className="auth-form">
           <label>
             Titre
@@ -108,7 +117,7 @@ function ResourceFormModal({ onClose, onCreated }) {
             <button type="button" onClick={onClose} className="btn-secondary">
               Annuler
             </button>
-            <button type="submit">Créer</button>
+            <button type="submit">{isEditing ? "Enregistrer" : "Créer"}</button>
           </div>
         </form>
       </div>

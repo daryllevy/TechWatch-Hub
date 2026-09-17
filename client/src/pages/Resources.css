@@ -1,3 +1,31 @@
+.resource-card {
+  display: flex;
+  flex-direction: column;
+}
+.resource-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.resource-card-title {
+  text-decoration: none;
+  color: inherit;
+}
+
+.resource-card-icons {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.icon-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0.2rem;
+}
+
 .resources-toolbar {
   display: flex;
   justify-content: flex-end;
@@ -18,11 +46,51 @@
   overflow: hidden;
 }
 
+.resource-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 0.8rem;
+}
+
+.resource-detail-tags {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
 .badge-select {
+  display: inline-block;
+  margin: 0.5rem 0;
+  align-self: flex-start;
   border: none;
   border-radius: 12px;
   padding: 0.2rem 0.6rem;
   font-size: 0.75rem;
   cursor: pointer;
   font-family: inherit;
+}
+
+.notes-section {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1.5rem;
+}
+
+.notes-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+}
+
+.notes-placeholder {
+  border: 1px dashed #ccc;
+  border-radius: 6px;
+  padding: 1rem;
+  color: #999;
+  font-size: 0.85rem;
+  text-align: center;
 }
