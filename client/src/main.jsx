@@ -7,6 +7,7 @@ import Register from "./pages/Register.jsx";
 import Resources from "./pages/Resources.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import PublicOnlyRoute from "./components/PublicOnlyRoute.jsx";
+import ResourceDetail from "./pages/ResourceDetail.jsx";
 import "./index.css";
 
 createRoot(document.getElementById("root")).render(
@@ -43,6 +44,14 @@ createRoot(document.getElementById("root")).render(
             element={
               <PrivateRoute>
                 <Resources />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="resources/:id"
+            element={
+              <PrivateRoute>
+                <ResourceDetail />
               </PrivateRoute>
             }
           />
