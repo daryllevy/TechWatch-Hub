@@ -28,11 +28,45 @@
 
 .resources-toolbar {
   display: flex;
-  justify-content: flex-end;
   align-items: center;
+  gap: 0.6rem;
   padding-bottom: 1rem;
   margin-bottom: 1.5rem;
   border-bottom: 1px solid #e0e0e0;
+}
+
+.search-input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.btn-filters,
+.btn-secondary,
+.btn-add {
+  padding: 0.5rem 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+}
+
+.btn-add {
+  background-color: aqua;
+}
+
+.filters-panel {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+}
+
+.filters-panel input,
+.filters-panel select {
+  padding: 0.4rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
 }
 
 .resource-card-description {
