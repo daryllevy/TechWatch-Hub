@@ -18,7 +18,6 @@ exports.createResource = async (req, res) => {
 
     res.status(201).json(resource);
   } catch (err) {
-    technology;
     if (err.name === "ValidationError") {
       const messages = Object.values(err.errors).map((e) => e.message);
       return res.status(400).json({ error: messages.join(", ") });
@@ -30,7 +29,35 @@ exports.createResource = async (req, res) => {
 // Lister toutes les ressources
 exports.getAllResources = async (req, res) => {
   try {
-    const resources = await Resource.find({ userId: req.user }).exec();
+    const filter = { userId: req.user };
+
+    if (req.query.keyword) {
+      filter.title = { $regex: req.query.keyword, $options: "i" }; // recherche d'une correspondance insensible à la casse
+    }
+
+    if (req.query.technology) {
+      filter.technology = {
+        $regex: `^${req.query.technology}$`,
+        $options: `i`,
+      };
+    }
+
+    if (req.query.level) {
+      filter.level = {
+        $regex: `^${req.query.level}$`,
+        $options: `i`,
+      };
+    }
+
+    if (req.query.tag) {
+      filter.tags = {
+        $regex: `^${req.query.tag}$`,
+        $options: `i`,
+      };;
+    }
+
+    const resources = await Resource.find(filter).exec();
+
     res.json(resources);
   } catch (err) {
     res
