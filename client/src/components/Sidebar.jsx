@@ -7,6 +7,7 @@ function Sidebar() {
         {/*pour éviter de recharger complètement la page*/}
         <Link to="/">Accueil</Link>
         <Link to="/resources">Resources</Link>
+        <Link to="/collections">Collections</Link>
       </nav>
     </aside>
   );

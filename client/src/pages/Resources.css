@@ -128,3 +128,64 @@
   font-size: 0.85rem;
   text-align: center;
 }
+
+.visibility-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 0.7rem 1rem;
+}
+
+.visibility-toggle {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.visibility-toggle button {
+  padding: 0.3rem 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  background: white;
+  color: #333;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.visibility-toggle button.active {
+  background: #111;
+  color: white;
+  border-color: #111;
+}
+
+.resource-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+  max-height: 140px;
+  overflow-y: auto;
+}
+
+.resource-checklist label.checklist-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+}
+
+.collection-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.6rem;
+}
+
+.badge-clickable-toggle {
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: inherit;
+}
