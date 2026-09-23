@@ -46,6 +46,20 @@ function Collections() {
     }
   }
 
+  async function handleToggleVisibility(collection) {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await api.put(
+        `/api/collections/${collection._id}/visibility`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+      handleSaved(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   return (
     <div>
       <div className="resources-toolbar">
@@ -66,10 +80,17 @@ function Collections() {
               </Link>
               <div className="resources-card-icons">
                 <button
-                  onClick={() => setEditingCollection(c)}
+                  onClick={() => handleToggleVisibility(c)}
                   className={`badge badge-clickable-toggle badge-${c.isPublic ? "green" : "gray"}`}
                 >
                   {c.isPublic ? "Public" : "Privé"}
+                </button>
+                <button
+                  onClick={() => setEditingCollection(c)}
+                  className="icon-btn"
+                  title="Modifier"
+                >
+                  ✎
                 </button>
                 <button
                   onClick={() => handleDelete(c._id)}
