@@ -8,6 +8,8 @@ import Resources from "./pages/Resources.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import PublicOnlyRoute from "./components/PublicOnlyRoute.jsx";
 import ResourceDetail from "./pages/ResourceDetail.jsx";
+import Collections from "./pages/Collections.jsx";
+import CollectionDetail from "./pages/CollectionDetail.jsx";
 import "./index.css";
 
 createRoot(document.getElementById("root")).render(
@@ -52,6 +54,22 @@ createRoot(document.getElementById("root")).render(
             element={
               <PrivateRoute>
                 <ResourceDetail />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="collections"
+            element={
+              <PrivateRoute>
+                <Collections />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="collections/:id"
+            element={
+              <PrivateRoute>
+                <CollectionDetail />
               </PrivateRoute>
             }
           />
