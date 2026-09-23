@@ -53,7 +53,9 @@ exports.getCollection = async (req, res) => {
   try {
     const collectionId = req.params.id;
 
-    const collection = await Collection.findById(collectionId).populate('resources').exec();
+    const collection = await Collection.findById(collectionId)
+      .populate("resources")
+      .exec();
 
     if (!collection) {
       return res.status(404).json({ error: "Cette collection n'existe pas" });
@@ -98,6 +100,29 @@ exports.updateCollection = async (req, res) => {
       { new: true, runValidators: true },
     ).exec();
     res.status(200).json(updatedCollection);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+exports.updateCollectionVisibility = async (req, res) => {
+  try {
+    const collection = await Collection.findById(req.params.id).exec();
+    if (!collection) {
+      return res.status(404).json({ error: "Cette collection n'existe pas." });
+    }
+
+    if (collection.userId.toString() !== req.user.toString()) {
+      return res.status(403).json({
+        error:
+          "Accès refusé : vous n'êtes pas le propriétaire de cette collection.",
+      });
+    }
+
+    collection.isPublic = !collection.isPublic;
+    await collection.save();
+
+    res.status(200).json(collection);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -191,7 +216,7 @@ exports.removeResourceFromCollection = async (req, res) => {
     );
 
     await collection.save();
-    res.status(200).json({ collection });
+    res.status(200).json(collection);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }

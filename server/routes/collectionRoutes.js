@@ -15,8 +15,13 @@ router.post(
 );
 router.delete(
   "/:id/resources/:resourceId",
-  authMiddleware,
+  authMiddleware,   
   collectionController.removeResourceFromCollection,
+);
+router.put(
+  "/:id/visibility",
+  authMiddleware,
+  collectionController.updateCollectionVisibility,
 );
 
 module.exports = router;
