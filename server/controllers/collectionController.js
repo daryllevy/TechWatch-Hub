@@ -41,11 +41,7 @@ exports.getMyCollections = async (req, res) => {
   try {
     const myCollections = await Collection.find({ userId: req.user }).exec();
 
-    if (myCollections.length === 0) {
-      return res.status(200).json({ myCollections: [] });
-    }
-
-    res.status(200).json({ myCollections });
+    res.status(200).json(myCollections);
   } catch (err) {
     res.status(500).json({
       error: err.message,
@@ -57,7 +53,7 @@ exports.getCollection = async (req, res) => {
   try {
     const collectionId = req.params.id;
 
-    const collection = await Collection.findById(collectionId).exec();
+    const collection = await Collection.findById(collectionId).populate('resources').exec();
 
     if (!collection) {
       return res.status(404).json({ error: "Cette collection n'existe pas" });
@@ -133,5 +129,70 @@ exports.deleteCollection = async (req, res) => {
     });
   } catch (err) {
     return res.status(500).json({ error: err.message });
+  }
+};
+
+exports.addResourceToCollection = async (req, res) => {
+  try {
+    const collection = await Collection.findById(req.params.id).exec();
+    if (!collection) {
+      return res.status(404).json({ error: "Cette collection n'existe pas." });
+    }
+
+    if (collection.userId.toString() !== req.user.toString()) {
+      return res.status(403).json({
+        error:
+          "Accès refusé : vous n'êtes pas le propriétaire de cette collection.",
+      });
+    }
+
+    const { resourceId } = req.body;
+    const resource = await Resource.findOne({
+      _id: resourceId,
+      userId: req.user,
+    }).exec();
+
+    if (!resource) {
+      return res
+        .status(400)
+        .json({ error: "Ressource invalide ou ne vous appartenant pas." });
+    }
+
+    if (collection.resources.some((r) => r.toString() === resourceId)) {
+      return res
+        .status(400)
+        .json({ error: "Cette ressource est déjà dans la collection." });
+    }
+
+    collection.resources.push(resourceId);
+    await collection.save();
+    res.status(200).json(collection);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+exports.removeResourceFromCollection = async (req, res) => {
+  try {
+    const collection = await Collection.findById(req.params.id).exec();
+    if (!collection) {
+      return res.status(404).json({ error: "Cette collection n'existe pas." });
+    }
+
+    if (collection.userId.toString() !== req.user.toString()) {
+      return res.status(403).json({
+        error:
+          "Accès refusé : vous n'êtes pas le propriétaire de cette collection.",
+      });
+    }
+
+    collection.resources = collection.resources.filter(
+      (r) => r.toString() !== req.params.resourceId,
+    );
+
+    await collection.save();
+    res.status(200).json({ collection });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
 };

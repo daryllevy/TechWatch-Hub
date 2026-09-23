@@ -8,5 +8,15 @@ router.get("/", authMiddleware, collectionController.getMyCollections);
 router.get("/:id", authMiddleware, collectionController.getCollection);
 router.put("/:id", authMiddleware, collectionController.updateCollection);
 router.delete("/:id", authMiddleware, collectionController.deleteCollection);
+router.post(
+  "/:id/resources",
+  authMiddleware,
+  collectionController.addResourceToCollection,
+);
+router.delete(
+  "/:id/resources/:resourceId",
+  authMiddleware,
+  collectionController.removeResourceFromCollection,
+);
 
 module.exports = router;
