@@ -64,6 +64,10 @@ exports.getCollection = async (req, res) => {
     const isAccessible = collection.isPublic;
 
     if (!isAccessible) {
+      if (!req.user) {
+        return res.status(403).json({ error: "Accès interdit à la connexion" });
+      }
+      
       return collection.userId.toString() == req.user.toString()
         ? res.status(200).json(collection)
         : res.status(403).json({ error: "Accès interdit à la collection" });

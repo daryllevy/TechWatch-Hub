@@ -66,14 +66,7 @@ createRoot(document.getElementById("root")).render(
               </PrivateRoute>
             }
           />
-          <Route
-            path="collections/:id"
-            element={
-              <PrivateRoute>
-                <CollectionDetail />
-              </PrivateRoute>
-            }
-          />
+          <Route path="collections/:id" element={<CollectionDetail />} />
           <Route path="library" element={<Library />} />
         </Route>
       </Routes>

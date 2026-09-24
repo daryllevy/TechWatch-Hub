@@ -5,8 +5,8 @@ const { authMiddleware } = require("../middlewares/authMiddleware");
 
 router.post("/", authMiddleware, collectionController.createCollection);
 router.get("/", authMiddleware, collectionController.getMyCollections);
-router.get("/public", collectionController.getPublicCollections)
-router.get("/:id", authMiddleware, collectionController.getCollection);
+router.get("/public", collectionController.getPublicCollections);
+router.get("/:id", collectionController.getCollection);
 router.put("/:id", authMiddleware, collectionController.updateCollection);
 router.delete("/:id", authMiddleware, collectionController.deleteCollection);
 router.post(
@@ -16,7 +16,7 @@ router.post(
 );
 router.delete(
   "/:id/resources/:resourceId",
-  authMiddleware,   
+  authMiddleware,
   collectionController.removeResourceFromCollection,
 );
 router.put(
