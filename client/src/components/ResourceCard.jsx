@@ -37,26 +37,32 @@ function ResourceCard({ resource, onStatusChange, onEdit, onDelete }) {
           <h3>{resource.title}</h3>
         </Link>
         <div className="resource-card-icons">
-          <button
-            onClick={() => onEdit(resource)}
-            className="icon-btn"
-            title="Modifier"
-          >
-            ✎
-          </button>
-          <button
-            onClick={() => onDelete(resource._id)}
-            className="icon-btn"
-            title="Supprimer"
-          >
-            🗑
-          </button>
+          {onEdit && (
+            <button
+              onClick={() => onEdit(resource)}
+              className="icon-btn"
+              title="Modifier"
+            >
+              ✎
+            </button>
+          )}
+
+          {onDelete && (
+            <button
+              onClick={() => onDelete(resource._id)}
+              className="icon-btn"
+              title="Supprimer"
+            >
+              🗑
+            </button>
+          )}
         </div>
       </div>
       <select
         className={`badge-select badge-${statusColor}`}
         value={resource.status}
-        onChange={handleStatusChange}
+        onChange={onStatusChange ? handleStatusChange : undefined}
+        disabled={!onStatusChange}
       >
         {allStatuses.map((s) => (
           <option key={s} value={s}>

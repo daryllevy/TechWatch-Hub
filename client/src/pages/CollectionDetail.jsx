@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import api from "../services/api";
 import ResourceCard from "../components/ResourceCard";
 import ResourceFormModal from "../components/ResourceFormModal";
+import getCurrentUserId from "../utils/getCurrentUserId";
 
 function CollectionDetail() {
   const navigate = useNavigate();
@@ -26,6 +27,11 @@ function CollectionDetail() {
   useEffect(() => {
     chargerCollection();
   }, [id]);
+
+  const isOwner =
+    collection && collection.userId?._id
+      ? collection.userId._id === getCurrentUserId()
+      : collection?.userId === getCurrentUserId();
 
   async function handleDelete(resourceId) {
     if (!window.confirm("Retirer cette ressource de la collection ?")) return;
@@ -57,13 +63,15 @@ function CollectionDetail() {
           >
             {collection.isPublic ? "Public" : "Privé"}
           </span>
-          <button
-            onClick={handleDeleteCollection}
-            className="icon-btn"
-            title="Supprimer"
-          >
-            🗑
-          </button>
+          {isOwner && (
+            <button
+              onClick={handleDeleteCollection}
+              className="icon-btn"
+              title="Supprimer"
+            >
+              🗑
+            </button>
+          )}
         </div>
       </div>
       <p>{collection.description}</p>
@@ -73,9 +81,9 @@ function CollectionDetail() {
           <ResourceCard
             key={resource._id}
             resource={resource}
-            onStatusChange={chargerCollection}
-            onEdit={setEditingResource}
-            onDelete={handleDelete}
+            onStatusChange={isOwner ? chargerCollection : undefined}
+            onEdit={isOwner ? setEditingResource : undefined}
+            onDelete={isOwner ? handleDelete : undefined}
           />
         ))}
       </div>
