@@ -189,3 +189,22 @@
   white-space: nowrap;
   font-family: inherit;
 }
+
+.library-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.library-owner {
+  font-size: 0.75rem;
+  color: #999;
+  margin-bottom: 0.4rem;
+}
+
+.library-stats {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: #666;
+}
