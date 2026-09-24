@@ -5,6 +5,7 @@ const { authMiddleware } = require("../middlewares/authMiddleware");
 
 router.post("/", authMiddleware, collectionController.createCollection);
 router.get("/", authMiddleware, collectionController.getMyCollections);
+router.get("/public", collectionController.getPublicCollections)
 router.get("/:id", authMiddleware, collectionController.getCollection);
 router.put("/:id", authMiddleware, collectionController.updateCollection);
 router.delete("/:id", authMiddleware, collectionController.deleteCollection);

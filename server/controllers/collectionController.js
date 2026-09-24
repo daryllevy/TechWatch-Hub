@@ -75,6 +75,24 @@ exports.getCollection = async (req, res) => {
   }
 };
 
+exports.getPublicCollections = async (req, res) => {
+  try {
+    const filter = { isPublic: true };
+    if (req.query.keyword) {
+      filter.title = { $regex: req.query.keyword, $options: "i" };
+    }
+
+    const collections = await Collection.find(filter)
+      .populate("userId", "username")
+      .sort({ likesCount: -1 }) // fait afficher les collections les plus likées en premier
+      .exec();
+
+    res.status(200).json(collections);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 exports.updateCollection = async (req, res) => {
   try {
     const collectionId = req.params.id;
