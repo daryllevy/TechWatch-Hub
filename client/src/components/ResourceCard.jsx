@@ -33,9 +33,24 @@ function ResourceCard({ resource, onStatusChange, onEdit, onDelete }) {
   return (
     <div className="resource-card">
       <div className="resource-card-header">
-        <Link to={`/resources/${resource._id}`} className="resource-card-title">
-          <h3>{resource.title}</h3>
-        </Link>
+        {onEdit ? (
+          <Link
+            to={`/resources/${resource._id}`}
+            className="resource-card-title"
+          >
+            <h3>{resource.title}</h3>
+          </Link>
+        ) : (
+          <a
+            href={resource.url}
+            className="resource-card-title"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <h3>{resource.title}</h3>
+          </a>
+        )}
+
         <div className="resource-card-icons">
           {onEdit && (
             <button

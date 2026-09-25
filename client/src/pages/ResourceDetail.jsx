@@ -6,6 +6,7 @@ import { statusColors, levelColors } from "../utils/resourceColors";
 function ResourceDetail() {
   const { id } = useParams(); // lit les segments dynamiques de l'url
   const [resource, setResource] = useState(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     async function chargerRessource() {
@@ -16,11 +17,18 @@ function ResourceDetail() {
         });
         setResource(response.data);
       } catch (err) {
-        console.error(err);
+        setError(
+          err.response?.data?.error ||
+            "Impossible d'accéder à cette ressource.",
+        );
       }
     }
     chargerRessource();
   }, [id]);
+
+  if (error) {
+    return <p className="auth-error">{error}</p>;
+  }
 
   if (!resource) {
     return <p>Chargement...</p>;
