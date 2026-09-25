@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../services/api";
 import ResourceCard from "../components/ResourceCard";
@@ -7,6 +7,7 @@ import getCurrentUserId from "../utils/getCurrentUserId";
 
 function CollectionDetail() {
   const navigate = useNavigate();
+  const hasLoaded = useRef(false);
 
   const { id } = useParams();
   const [collection, setCollection] = useState(null);
@@ -25,6 +26,8 @@ function CollectionDetail() {
   }
 
   useEffect(() => {
+    if (hasLoaded.current) return;
+    hasLoaded.current = true;
     chargerCollection();
   }, [id]);
 

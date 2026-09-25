@@ -92,7 +92,7 @@ function Library() {
                     onClick={(e) => handleToggleLike(e, c._id)}
                     className={`like-btn ${isLiked ? "liked" : ""}`}
                   >
-                    {isLiked ? "♥" : "♡"}
+                    {isLiked ? "♥" : "♡"} {c.likesCount}
                   </button>
                   <span>👁 {c.viewCount}</span>
                 </div>
