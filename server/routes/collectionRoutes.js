@@ -24,5 +24,6 @@ router.put(
   authMiddleware,
   collectionController.updateCollectionVisibility,
 );
+router.post("/:id/like", authMiddleware, collectionController.toggleLike);
 
 module.exports = router;

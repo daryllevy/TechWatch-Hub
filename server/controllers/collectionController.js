@@ -68,10 +68,14 @@ exports.getCollection = async (req, res) => {
         return res.status(403).json({ error: "Accès interdit à la connexion" });
       }
 
-      return collection.userId.toString() == req.user.toString()
-        ? res.status(200).json(collection)
-        : res.status(403).json({ error: "Accès interdit à la collection" });
+      if (collection.userId.toString() !== req.user.toString()) {
+        return res.status(403).json({ error: "Accès interdit à la connexion" });
+      }
+      return res.status(200).json(collection);
     }
+
+    collection.viewCount += 1;
+    await collection.save();
 
     res.status(200).json(collection);
   } catch (err) {
@@ -239,6 +243,42 @@ exports.removeResourceFromCollection = async (req, res) => {
 
     await collection.save();
     res.status(200).json(collection);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+exports.toggleLike = async (req, res) => {
+  try {
+    const collection = await Collection.findById(req.params.id).exec();
+    if (!collection) {
+      return res.status(404).json({ error: "Cette collection n'existe pas" });
+    }
+
+    if (!collection.isPublic) {
+      return res
+        .status(403)
+        .json({ error: "Impossible de liker une collection privée" });
+    }
+
+    const alreadyLiked = collection.likedBy.some(
+      (id) => id.toString() === req.user.toString(),
+    );
+
+    if (alreadyLiked) {
+      collection.likedBy = collection.likedBy.filter(
+        (id) => id.toString() !== req.user.toString(),
+      );
+      collection.likesCount -= 1;
+    } else {
+      collection.likedBy.push(req.user);
+      collection.likesCount += 1;
+    }
+
+    await collection.save();
+    res
+      .status(200)
+      .json({ liked: !alreadyLiked, likesCount: collection.likesCount });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
