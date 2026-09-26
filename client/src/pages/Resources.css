@@ -221,3 +221,68 @@
 .like-btn.liked {
   color: #e0245e;
 }
+
+.notes-drawer {
+  margin-top: 0.6rem;
+  border-top: 1px solid #eee;
+  padding-top: 0.6rem;
+}
+
+.notes-drawer textarea {
+  width: 100%;
+  min-height: 60px;
+  padding: 0.4rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-family: inherit;
+  margin-bottom: 0.4rem;
+}
+
+.dashboard-counts {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.dashboard-count-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.dashboard-count-number {
+  display: block;
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
+.dashboard-count-label {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.dashboard-panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.dashboard-panel {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.dashboard-activity-item {
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.85rem;
+}
+
+.dashboard-activity-item {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}

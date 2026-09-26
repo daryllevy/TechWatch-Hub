@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import api from "../services/api";
 import { statusColors, levelColors } from "../utils/resourceColors";
 
@@ -12,6 +13,10 @@ function ResourceCard({ resource, onStatusChange, onEdit, onDelete }) {
     "à revoir",
     "favori",
   ];
+  const [showNotes, setShowNotes] = useState(false);
+  const [noteContent, setNoteContent] = useState();
+  const [noteExists, setNoteExists] = useState(false);
+  const [noteLoaded, setNoteLoaded] = useState(false);
 
   async function handleStatusChange(e) {
     const newStatus = e.target.value;
@@ -28,6 +33,37 @@ function ResourceCard({ resource, onStatusChange, onEdit, onDelete }) {
     } catch (err) {
       console.error(err);
     }
+  }
+
+  async function toggleNotes() {
+    const willShow = !showNotes;
+    setShowNotes(willShow);
+
+    if (willShow && !noteLoaded) {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await api.get(`/api/resources/${resource._id}/notes`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setNoteContent(response.data.content);
+        setNoteExists(true);
+      } catch (err) {
+        // 404 = pas encore de note, comportement normal, pas une vraie erreur
+      }
+
+      setNoteLoaded(true);
+    }
+  }
+
+  async function saveNote() {
+    const token = localStorage.getItem("token");
+    const method = noteExists ? "put" : "post";
+    const response = await api[method](
+      `/api/resources/${resource._id}/notes`,
+      { content: noteContent },
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+    setNoteExists(true);
   }
 
   return (
@@ -62,6 +98,16 @@ function ResourceCard({ resource, onStatusChange, onEdit, onDelete }) {
             </button>
           )}
 
+          {onEdit && (
+            <button
+              onClick={toggleNotes}
+              className="icon-btn"
+              title="Mes notes"
+            >
+              📝
+            </button>
+          )}
+
           {onDelete && (
             <button
               onClick={() => onDelete(resource._id)}
@@ -90,6 +136,19 @@ function ResourceCard({ resource, onStatusChange, onEdit, onDelete }) {
         <span className="badge">{resource.technology}</span>
         <span className={`badge badge-${levelColor}`}>{resource.level}</span>
       </div>
+
+      {showNotes && (
+        <div className="notes-drawer">
+          <textarea
+            value={noteContent}
+            onChange={(e) => setNoteContent(e.target.value)}
+            placeholder="Écris ta note ici ..."
+          />
+          <button onClick={saveNote} className="btn-secondary">
+            Enregistrer
+          </button>
+        </div>
+      )}
     </div>
   );
 }

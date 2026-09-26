@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./App.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
@@ -11,6 +11,7 @@ import ResourceDetail from "./pages/ResourceDetail.jsx";
 import Collections from "./pages/Collections.jsx";
 import CollectionDetail from "./pages/CollectionDetail.jsx";
 import Library from "./pages/Library.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
 import "./index.css";
 
 createRoot(document.getElementById("root")).render(
@@ -38,7 +39,7 @@ createRoot(document.getElementById("root")).render(
             index
             element={
               <PrivateRoute>
-                <Navigate to="/resources" replace />
+                <Dashboard />
               </PrivateRoute>
             }
           />
