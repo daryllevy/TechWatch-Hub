@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import api from "../services/api";
 import { statusColors, levelColors } from "../utils/resourceColors";
+import useNote from "../hooks/useNotes";
 
 function ResourceCard({ resource, onStatusChange, onEdit, onDelete }) {
   const statusColor = statusColors[resource.status] || "gray";
@@ -14,9 +15,7 @@ function ResourceCard({ resource, onStatusChange, onEdit, onDelete }) {
     "favori",
   ];
   const [showNotes, setShowNotes] = useState(false);
-  const [noteContent, setNoteContent] = useState();
-  const [noteExists, setNoteExists] = useState(false);
-  const [noteLoaded, setNoteLoaded] = useState(false);
+  const note = useNote(resource._id);
 
   async function handleStatusChange(e) {
     const newStatus = e.target.value;
@@ -38,21 +37,7 @@ function ResourceCard({ resource, onStatusChange, onEdit, onDelete }) {
   async function toggleNotes() {
     const willShow = !showNotes;
     setShowNotes(willShow);
-
-    if (willShow && !noteLoaded) {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await api.get(`/api/resources/${resource._id}/notes`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setNoteContent(response.data.content);
-        setNoteExists(true);
-      } catch (err) {
-        // 404 = pas encore de note, comportement normal, pas une vraie erreur
-      }
-
-      setNoteLoaded(true);
-    }
+    if (willShow && !note.loaded) note.load();
   }
 
   async function saveNote() {
@@ -140,13 +125,25 @@ function ResourceCard({ resource, onStatusChange, onEdit, onDelete }) {
       {showNotes && (
         <div className="notes-drawer">
           <textarea
-            value={noteContent}
-            onChange={(e) => setNoteContent(e.target.value)}
-            placeholder="Écris ta note ici ..."
+            value={note.content}
+            onChange={(e) => note.setContent(e.target.value)}
+            placeholder="Écris ta note ici..."
           />
-          <button onClick={saveNote} className="btn-secondary">
-            Enregistrer
-          </button>
+          <div className="notes-save-row">
+            {note.justSaved && (
+              <span style={{ color: "#0f6e5c", fontSize: "0.8rem" }}>
+                ✓ Enregistrée
+              </span>
+            )}
+            {note.error && <span className="auth-error">{note.error}</span>}
+            <button
+              onClick={note.save}
+              className="btn-secondary"
+              disabled={note.saving}
+            >
+              {note.saving ? "Enregistrement..." : "Enregistrer"}
+            </button>
+          </div>
         </div>
       )}
     </div>

@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import api from "../services/api";
 import { statusColors, levelColors } from "../utils/resourceColors";
+import useNote from "../hooks/useNotes";
 
 function ResourceDetail() {
   const { id } = useParams(); // lit les segments dynamiques de l'url
   const [resource, setResource] = useState(null);
   const [error, setError] = useState("");
+  const note = useNote(id);
 
   useEffect(() => {
     async function chargerRessource() {
@@ -24,6 +26,7 @@ function ResourceDetail() {
       }
     }
     chargerRessource();
+    note.load();
   }, [id]);
 
   if (error) {
@@ -66,15 +69,27 @@ function ResourceDetail() {
       <div className="notes-section">
         <div className="notes-header">
           <span>📝 mes notes</span>
+        </div>
+        <textarea
+          value={note.content}
+          onChange={(e) => note.setContent(e.target.value)}
+          placeholder="Écris ta note ici..."
+        />
+        <div className="notes-save-row">
+          {note.justSaved && (
+            <span style={{ color: "#0f6e5c", fontSize: "0.8rem" }}>
+              ✓ Enregistrée
+            </span>
+          )}
+          {note.error && <span className="auth-error">{note.error}</span>}
           <button
-            className="btn-add"
-            disabled
-            title="(A implémenter plus tard)"
+            onClick={note.save}
+            className="btn-secondary"
+            disabled={note.saving}
           >
-            + ajouter
+            {note.saving ? "Enregistrement..." : "Enregistrer"}
           </button>
         </div>
-        <div className="notes-placeholder">A implémenter plus tard</div>
       </div>
     </div>
   );
